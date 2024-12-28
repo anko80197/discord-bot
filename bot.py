@@ -15,18 +15,24 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 # 爬蟲 - 獲取 Token 資料
 def get_token_data():
     try:
+        # 目標網站
         url = 'https://wowauction.us/classic/token/tw'
-        response = requests.get(url)
-        response.raise_for_status()
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()  # 確保請求成功
 
         # 解析 HTML
         soup = BeautifulSoup(response.text, 'html.parser')
-        current_price = soup.find('b', text='Current:').find_next('span').text.strip()
-        low_24hr = soup.find('b', text='24 hour low:').find_next('span').text.strip()
-        high_24hr = soup.find('b', text='24 hour high:').find_next('span').text.strip()
 
+        # 找到價格資訊
+        current_price = soup.find('b', string='Current:').find_next('span').text.strip()
+        low_24hr = soup.find('b', string='24 hour low:').find_next('span').text.strip()
+        high_24hr = soup.find('b', string='24 hour high:').find_next('span').text.strip()
+
+        # 返回格式化後的資料
         return f"當前Token價格: {current_price} \n24小時最低: {low_24hr} \n24小時最高: {high_24hr}"
+
     except Exception as e:
+        # 打印錯誤日誌，幫助調試
         print(f"Error fetching data: {e}")
         return "無法抓取 Token 資料"
 
