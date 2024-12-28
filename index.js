@@ -21,36 +21,24 @@ async function getTokenData() {
         const response = await axios.get('https://wowauction.us/classic/token/tw');
         const $ = cheerio.load(response.data);
 
-        // 精確選擇器抓取當前Token價格
-        const currentPrice = $('div.text-amber-400')
-            .find('b:contains("Current:")')  // 查找 "Current:" 的 b 元素
-            .parent()  // 找到父元素
-            .next()  // 獲取緊跟著 "Current:" 的價格
-            .text()
-            .trim();
+        // 輸出整個 HTML 結構，來檢查網頁的內容
+        console.log(response.data);  // 打印網頁HTML結構，查看是否正確獲取
 
-        // 抓取24小時最低和最高價格
-        const low24hr = $('div.text-amber-400')
-            .find('b:contains("24 hour low:")')  // 查找 "24 hour low:" 的 b 元素
-            .parent()  // 找到父元素
-            .next()  // 獲取緊跟著 "24 hour low:" 的價格
-            .text()
-            .trim();
+        // 使用正確的選擇器抓取 Token 資料
+        const currentPrice = $('b:contains("Current:")').parent().next().text().trim();
+        const low24hr = $('b:contains("24 hour low:")').parent().next().text().trim();
+        const high24hr = $('b:contains("24 hour high:")').parent().next().text().trim();
 
-        const high24hr = $('div.text-amber-400')
-            .find('b:contains("24 hour high:")')  // 查找 "24 hour high:" 的 b 元素
-            .parent()  // 找到父元素
-            .next()  // 獲取緊跟著 "24 hour high:" 的價格
-            .text()
-            .trim();
+        // 輸出每個價格以進行檢查
+        console.log("當前Token價格:", currentPrice);
+        console.log("24小時最低:", low24hr);
+        console.log("24小時最高:", high24hr);
 
-        // 檢查抓取資料是否成功
+        // 檢查是否成功抓取價格，並返回格式化的資料
         if (!currentPrice || !low24hr || !high24hr) {
-            console.error("Missing one or more prices");
-            return "無法抓取 Token 資料";
+            return '無法抓取 Token 資料';
         }
 
-        // 返回格式化後的資料
         return `當前Token價格: ${currentPrice} \n24小時最低: ${low24hr} \n24小時最高: ${high24hr}`;
     } catch (error) {
         console.error('Error fetching data:', error);
