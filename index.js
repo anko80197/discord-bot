@@ -25,15 +25,9 @@ async function getTokenData() {
         const twSection = $('div:contains("Classic TW WoW Token Price")').first();
 
         const currentPrice = twSection.find('b:contains("Current:")').next().text().trim();
-        const low24hr = twSection.find('b:contains("24 hour low:")').next().text().trim();
-        const high24hr = twSection.find('b:contains("24 hour high:")').next().text().trim();
-        const low7day = twSection.find('b:contains("7 day low:")').next().text().trim();
-        const high7day = twSection.find('b:contains("7 day high:")').next().text().trim();
-        const low30day = twSection.find('b:contains("30 day low:")').next().text().trim();
-        const high30day = twSection.find('b:contains("30 day high:")').next().text().trim();
 
         // 返回格式化後的資料
-        return `當前Token價格: ${currentPrice} \n24小時最低: ${low24hr} \n24小時最高: ${high24hr} \n7天最低: ${low7day} \n7天最高: ${high7day} \n30天最低: ${low30day} \n30天最高: ${high30day}`;
+        return `當前Token價格: ${currentPrice} \n`;
     } catch (error) {
         console.error('Error fetching data:', error);
         return '無法抓取 Token 資料';
