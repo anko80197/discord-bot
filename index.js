@@ -21,8 +21,13 @@ async function getTokenData() {
         const response = await axios.get('https://wowauction.us/classic/token');
         const $ = cheerio.load(response.data);
 
-        // 查找包含 "Current:" 的 b 標籤，並抓取它的兄弟元素（即價格）
-        const currentPrice = $('b:contains("Current:")').next().text().trim();
+        // 使用精確的選擇器，只抓取 TW WoW Token 的當前價格
+        const currentPrice = $('a[href="/classic/token/tw"]')
+            .parent()
+            .find('b:contains("Current:")')
+            .next()
+            .text()
+            .trim();
 
         // 返回格式化後的資料
         return `當前Token價格: ${currentPrice} \n`;
