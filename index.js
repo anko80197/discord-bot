@@ -1,9 +1,5 @@
 const { Client, GatewayIntentBits } = require('discord.js');
 
-// 確認 TOKEN 變數是否正確讀取
-console.log('TOKEN:', process.env.TOKEN);
-
-// 創建 Client
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -12,12 +8,10 @@ const client = new Client({
     ]
 });
 
-// 機器人啟動時的回調
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-// 處理訊息
 client.on('messageCreate', (message) => {
     if (message.author.bot) return;
 
@@ -26,5 +20,14 @@ client.on('messageCreate', (message) => {
     }
 });
 
-// 登錄機器人，確保 TOKEN 是從環境變數獲取
-client.login(process.env.TOKEN);
+// 获取环境变量中的 Token
+const token = process.env.DISCORD_TOKEN;
+if (!token) {
+    console.error('Discord token is missing!');
+    process.exit(1); // 如果没有获取到 token，退出程序
+}
+
+console.log('TOKEN:', token);
+
+// 登录机器人
+client.login(token);
