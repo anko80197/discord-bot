@@ -21,17 +21,12 @@ async function getTokenData() {
         const response = await axios.get('https://wowauction.us/classic/token');
         const $ = cheerio.load(response.data);
 
-        // 根據網站的結構選擇需要的資料（例如使用class選擇器）
-        const currentPrice = $('#price-table .current-price span').text().trim();  // 現在價格
-        const low24h = $('#price-table .low-24h span').text().trim();  // 24小時最低價
-        const high24h = $('#price-table .high-24h span').text().trim();  // 24小時最高價
-        const low7d = $('#price-table .low-7d span').text().trim();  // 7天最低價
-        const high7d = $('#price-table .high-7d span').text().trim();  // 7天最高價
-        const low30d = $('#price-table .low-30d span').text().trim();  // 30天最低價
-        const high30d = $('#price-table .high-30d span').text().trim();  // 30天最高價
+        // 打印網頁的 HTML 內容，幫助我們檢查結構
+        console.log($.html());  // 打印所有 HTML
 
-        // 返回抓取到的資料
-        return `當前Token價格: ${currentPrice}\n24小時最低價: ${low24h}\n24小時最高價: ${high24h}\n7天最低價: ${low7d}\n7天最高價: ${high7d}\n30天最低價: ${low30d}\n30天最高價: ${high30d}`;
+        // 根據網站的結構選擇需要的資料（假設該網站顯示token的價格）
+        const tokenPrice = $('.price').text();  // 根據網頁結構更新選擇器
+        return `當前Token價格: ${tokenPrice}`;
     } catch (error) {
         console.error('Error fetching data:', error);
         return '無法抓取 Token 資料';
