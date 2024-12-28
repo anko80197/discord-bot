@@ -21,24 +21,33 @@ async function getTokenData() {
         const response = await axios.get('https://wowauction.us/classic/token/tw');
         const $ = cheerio.load(response.data);
 
-        // 精確選擇器抓取當前Token價格
+        // 精確選擇器抓取當前Token價格，抓取 "Current:" 旁的價格
         const currentPrice = $('div.text-amber-400')
-            .first()  // 首個出現的 `div.text-amber-400`，通常是當前價格
-            .find('b:contains("Current:")')  // 找到 "Current:" 文字
-            .next()  // 抓取 "Current:" 之後的價格
+            .first()  // 選擇第一个 div.text-amber-400
+            .find('b') // 找到 b 標籤
+            .filter(function() {
+                return $(this).text().includes('Current:'); // 篩選包含 "Current:" 的 b 標籤
+            })
+            .next() // 抓取緊接著的元素，就是當前價格
             .text()
             .trim();
 
         // 抓取24小時最低和最高價格
         const low24hr = $('div.text-amber-400')
             .first()
-            .find('b:contains("24 hour low:")')
+            .find('b')
+            .filter(function() {
+                return $(this).text().includes('24 hour low:');
+            })
             .next()
             .text()
             .trim();
         const high24hr = $('div.text-amber-400')
             .first()
-            .find('b:contains("24 hour high:")')
+            .find('b')
+            .filter(function() {
+                return $(this).text().includes('24 hour high:');
+            })
             .next()
             .text()
             .trim();
