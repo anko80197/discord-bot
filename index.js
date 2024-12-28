@@ -21,14 +21,17 @@ async function getTokenData() {
         const response = await axios.get('https://wowauction.us/classic/token/tw');
         const $ = cheerio.load(response.data);
 
-        // 精確選擇器抓取當前Token價格，抓取 "Current:" 旁的價格
+        // 打印 HTML 結構來檢查
+        console.log(response.data);  // 可以用來檢查 HTML 結構
+
+        // 精確選擇器抓取當前Token價格
         const currentPrice = $('div.text-amber-400')
-            .first()  // 選擇第一个 div.text-amber-400
+            .first() // 選擇第一個符合條件的 div
             .find('b') // 找到 b 標籤
             .filter(function() {
                 return $(this).text().includes('Current:'); // 篩選包含 "Current:" 的 b 標籤
             })
-            .next() // 抓取緊接著的元素，就是當前價格
+            .next() // 找到價格（在 Current: 之後）
             .text()
             .trim();
 
