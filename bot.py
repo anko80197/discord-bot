@@ -2,10 +2,12 @@ import os
 import discord
 from discord.ext import commands
 
-# 從環境變數中讀取 Token
-TOKEN = os.getenv("DISCORD_TOKEN")
-
+# 啟用所有必要的 Intents
 intents = discord.Intents.default()
+intents.messages = True  # 必須啟用以讀取訊息內容
+intents.message_content = True  # 啟用 Message Content Intent
+
+# 初始化 Bot
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
@@ -16,7 +18,7 @@ async def on_ready():
 async def hello(ctx):
     await ctx.send("Hello, World!")
 
-# 啟動機器人
+TOKEN = os.getenv("DISCORD_TOKEN")
 if TOKEN:
     bot.run(TOKEN)
 else:
