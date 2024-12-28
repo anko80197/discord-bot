@@ -22,37 +22,32 @@ async function getTokenData() {
         const $ = cheerio.load(response.data);
 
         // 精確選擇器抓取當前Token價格
-        const currentPrice = $('div.text-amber-400') // 搜索包含價格的 div
-            .first()  // 只取第一個符合條件的 div
-            .find('b:contains("Current:")') // 查找 "Current:" 
-            .parent()
-            .next()
+        const currentPrice = $('div.text-amber-400')
+            .find('b:contains("Current:")')  // 查找 "Current:" 的 b 元素
+            .parent()  // 找到父元素
+            .next()  // 獲取緊跟著 "Current:" 的價格
             .text()
             .trim();
-
-        // 檢查抓取當前價格是否成功
-        if (!currentPrice) {
-            console.error("Current price not found!");
-            return "無法抓取當前價格資料";
-        }
 
         // 抓取24小時最低和最高價格
-        const low24hr = $('b:contains("24 hour low:")')  // 使用包含“24 hour low”文字的 b 元素
-            .parent()
-            .next()
+        const low24hr = $('div.text-amber-400')
+            .find('b:contains("24 hour low:")')  // 查找 "24 hour low:" 的 b 元素
+            .parent()  // 找到父元素
+            .next()  // 獲取緊跟著 "24 hour low:" 的價格
             .text()
             .trim();
 
-        const high24hr = $('b:contains("24 hour high:")')  // 使用包含“24 hour high”文字的 b 元素
-            .parent()
-            .next()
+        const high24hr = $('div.text-amber-400')
+            .find('b:contains("24 hour high:")')  // 查找 "24 hour high:" 的 b 元素
+            .parent()  // 找到父元素
+            .next()  // 獲取緊跟著 "24 hour high:" 的價格
             .text()
             .trim();
 
-        // 如果抓取到的價格為空，給予警告
-        if (!low24hr || !high24hr) {
-            console.error("24 hour high or low not found!");
-            return "無法抓取24小時價格資料";
+        // 檢查抓取資料是否成功
+        if (!currentPrice || !low24hr || !high24hr) {
+            console.error("Missing one or more prices");
+            return "無法抓取 Token 資料";
         }
 
         // 返回格式化後的資料
