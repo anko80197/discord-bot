@@ -15,23 +15,22 @@ client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-// 爬蟲 - 獲取 Token 資料
+// 爬蟲 - 獲取 Token 資料 (僅抓取 TW)
 async function getTokenData() {
     try {
         const response = await axios.get('https://wowauction.us/classic/token');
         const $ = cheerio.load(response.data);
 
-        // 輸出整個 HTML 結構，查看並調整選擇器
-        console.log(response.data);  // 可以用來檢查 HTML 結構
+        // 只抓取 "Classic TW WoW Token Price" 部分
+        const twSection = $('div:contains("Classic TW WoW Token Price")').first();
 
-        // 使用正確的選擇器抓取 Token 資料
-        const currentPrice = $('b:contains("Current:")').parent().next().text().trim();
-        const low24hr = $('b:contains("24 hour low:")').parent().next().text().trim();
-        const high24hr = $('b:contains("24 hour high:")').parent().next().text().trim();
-        const low7day = $('b:contains("7 day low:")').parent().next().text().trim();
-        const high7day = $('b:contains("7 day high:")').parent().next().text().trim();
-        const low30day = $('b:contains("30 day low:")').parent().next().text().trim();
-        const high30day = $('b:contains("30 day high:")').parent().next().text().trim();
+        const currentPrice = twSection.find('b:contains("Current:")').next().text().trim();
+        const low24hr = twSection.find('b:contains("24 hour low:")').next().text().trim();
+        const high24hr = twSection.find('b:contains("24 hour high:")').next().text().trim();
+        const low7day = twSection.find('b:contains("7 day low:")').next().text().trim();
+        const high7day = twSection.find('b:contains("7 day high:")').next().text().trim();
+        const low30day = twSection.find('b:contains("30 day low:")').next().text().trim();
+        const high30day = twSection.find('b:contains("30 day high:")').next().text().trim();
 
         // 返回格式化後的資料
         return `當前Token價格: ${currentPrice} \n24小時最低: ${low24hr} \n24小時最高: ${high24hr} \n7天最低: ${low7day} \n7天最高: ${high7day} \n30天最低: ${low30day} \n30天最高: ${high30day}`;
