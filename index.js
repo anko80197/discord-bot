@@ -15,16 +15,17 @@ client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-// 爬蟲 - 獲取 Token 資料 (僅抓取 TW)
+// 爬蟲 - 獲取 Token 資料
 async function getTokenData() {
     try {
         const response = await axios.get('https://wowauction.us/classic/token');
         const $ = cheerio.load(response.data);
 
-        // 只抓取 "Classic TW WoW Token Price" 部分
-        const twSection = $('div:contains("Classic TW WoW Token Price")').first();
+        // 輸出整個 HTML 結構，查看並調整選擇器
+        console.log(response.data);  // 可以用來檢查 HTML 結構
 
-        const currentPrice = twSection.find('b:contains("Current:")').next().text().trim();
+        // 使用正確的選擇器抓取 Token 資料
+        const currentPrice = $('b:contains("Current:")').parent().next().text().trim();
 
         // 返回格式化後的資料
         return `當前Token價格: ${currentPrice} \n`;
