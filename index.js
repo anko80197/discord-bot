@@ -1,7 +1,7 @@
 const { Client, GatewayIntentBits } = require('discord.js');
 
-// 直接將 Token 寫入程式碼中（雖然這不安全，但符合你的需求）
-const token = 'MTMyMjQyNTE3MDYwMTk3MTg3Mg.G-FW28.rdCuY5mp9duVZFlvM9NjsXko_8EESv3sNdoItA';
+// 確認 TOKEN 變數是否正確讀取
+console.log('TOKEN:', process.env.TOKEN);
 
 // 創建 Client
 const client = new Client({
@@ -26,6 +26,5 @@ client.on('messageCreate', (message) => {
     }
 });
 
-// 登錄機器人
-console.log('Bot is logging in...');
-client.login(token);
+// 登錄機器人，確保 TOKEN 是從環境變數獲取
+client.login(process.env.TOKEN);
