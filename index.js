@@ -21,11 +21,8 @@ async function getTokenData() {
         const response = await axios.get('https://wowauction.us/classic/token');
         const $ = cheerio.load(response.data);
 
-        // 輸出整個 HTML 結構，查看並調整選擇器
-        console.log(response.data);  // 可以用來檢查 HTML 結構
-
-        // 使用正確的選擇器抓取 Token 資料
-        const currentPrice = $('b:contains("Current:")').parent().next().text().trim();
+        // 查找包含 "Current:" 的 b 標籤，並抓取它的兄弟元素（即價格）
+        const currentPrice = $('b:contains("Current:")').next().text().trim();
 
         // 返回格式化後的資料
         return `當前Token價格: ${currentPrice} \n`;
