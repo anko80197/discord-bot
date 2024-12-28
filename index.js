@@ -21,15 +21,17 @@ async function getTokenData() {
         const response = await axios.get('https://wowauction.us/classic/token');
         const $ = cheerio.load(response.data);
 
-        // 這裡的選擇器已經根據你的需求進行更新
-        // 根據HTML結構選擇包含價格的元素
-        const currentPrice = $('div.flex-row div.text-amber-400 b:contains("Current:")').next().text().trim();
-        const low24hr = $('div.flex-row div.text-amber-400 b:contains("24 hour low:")').next().text().trim();
-        const high24hr = $('div.flex-row div.text-amber-400 b:contains("24 hour high:")').next().text().trim();
-        const low7day = $('div.flex-row div.text-amber-400 b:contains("7 day low:")').next().text().trim();
-        const high7day = $('div.flex-row div.text-amber-400 b:contains("7 day high:")').next().text().trim();
-        const low30day = $('div.flex-row div.text-amber-400 b:contains("30 day low:")').next().text().trim();
-        const high30day = $('div.flex-row div.text-amber-400 b:contains("30 day high:")').next().text().trim();
+        // 輸出整個 HTML 結構，查看並調整選擇器
+        console.log(response.data);  // 可以用來檢查 HTML 結構
+
+        // 使用正確的選擇器抓取 Token 資料
+        const currentPrice = $('b:contains("Current:")').parent().next().text().trim();
+        const low24hr = $('b:contains("24 hour low:")').parent().next().text().trim();
+        const high24hr = $('b:contains("24 hour high:")').parent().next().text().trim();
+        const low7day = $('b:contains("7 day low:")').parent().next().text().trim();
+        const high7day = $('b:contains("7 day high:")').parent().next().text().trim();
+        const low30day = $('b:contains("30 day low:")').parent().next().text().trim();
+        const high30day = $('b:contains("30 day high:")').parent().next().text().trim();
 
         // 返回格式化後的資料
         return `當前Token價格: ${currentPrice} \n24小時最低: ${low24hr} \n24小時最高: ${high24hr} \n7天最低: ${low7day} \n7天最高: ${high7day} \n30天最低: ${low30day} \n30天最高: ${high30day}`;
